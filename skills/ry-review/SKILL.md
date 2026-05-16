@@ -1,6 +1,6 @@
 ---
 name: ry-review
-description: Review 阶段：代码与文档质量审阅
+description: [手动触发]Review 阶段：代码与文档质量审阅
 ---
 
 # Review 阶段

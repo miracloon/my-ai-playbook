@@ -1,6 +1,6 @@
 ---
 name: docs-control
-description: 项目控制面文档的初始化、更新与对齐
+description: [手动触发]项目控制面文档的初始化、更新与对齐
 ---
 
 # 控制面文档 Skill
