@@ -27,7 +27,7 @@ design → plan → exec → summary → review
 
 - 阶段由用户通过 skill 命令显式触发，AI 不自动流转到下一阶段。
 - summary 和 review 可跳过，跳过不破坏系统。
-- 便捷指令「完成 vxx 闭环」：依次执行 summary + review，然后 git commit 本版本所有未提交的文件（包括 summary.md、review.md 及其他漏网文件）。
+- 便捷指令「完成 vxx 闭环」：触发版本闭环流程（见下方「版本闭环」章节）。
 - 小任务（bug 修复、配置调整、单文件修改等）不需要触发任何阶段 skill，直接处理即可。
 
 ---
@@ -93,6 +93,71 @@ docs/dev_notes/<version>/
 
 ---
 
-## 6. 项目特定 patch（按需）
+## 6. 版本闭环
+
+当用户指示「完成 vxx 闭环」或语义等价的指令时，连续执行以下步骤。
+
+**前置检查**：读取 `plan.md`，对照 git log 确认所有 task 的执行状态。
+
+- 全部完成 → 进入闭环流程
+- 存在未完成 task → 报告缺口，由用户裁定（继续闭环 / 先补完 / 标记为放弃）
+
+**Step 1：Summary**
+
+按 ry-summary 协议执行，产出 `summary.md`。
+闭环覆盖：不等待用户指令，直接进入 Step 2。
+
+**Step 2：Review**
+
+按 ry-review 协议执行，产出 `review.md`。
+闭环覆盖：不等待用户指令，直接进入 Step 3。
+
+**Step 3：控制文档对齐**
+
+评估本版本的开发是否导致项目级控制文档与现实脱节，按需更新。
+
+*是否需要更新的判断*：
+
+基于 summary.md、review.md、本版本 git log（从版本基线 commit 到当前 HEAD），判断是否存在以下信号：
+
+- 新增/删除了模块或功能域
+- 技术选型发生变化
+- 运转方式/部署方式改变
+- 外部依赖增减
+- 项目边界或目标调整
+
+以下情况通常**不需要更新**控制文档：
+
+- Bug 修复（除非揭示了文档描述有误导）
+- 纯 UI/样式调整
+- 内部重构但功能语义和模块边界不变
+- 依赖版本升级（除非涉及 API 变化）
+
+判断倾向应**保守**——宁可少更新。遗漏会在后续手动触发 docs-control review 时被捕获。
+
+- 若判断**无需更新** → 报告"本版本未影响控制文档"，跳到 Step 4
+- 若判断**需要更新** → 进入以下执行流程
+
+*执行流程*：
+
+1. 基于 summary.md + review.md + git log，形成对本版本变更的结构化理解（对应 docs-control update-protocol 的 Step 1）
+2. 加载 docs-control 的 update-protocol，**从 Step 2（影响面扫描）开始执行**，后续完全遵循 update-protocol 的流程和 references
+3. 代码库信息按需查阅——仅在文档和 commit 信息不足以判断影响面时，针对性扫描相关模块
+
+*确认机制*：
+
+- 默认（末端确认）：update-protocol 正常的确认流程
+- 用户指令含"全自动""无需确认"等语义 → 跳过确认，直接执行更新
+
+**Step 4：Commit**
+
+- Commit A：`docs/dev_notes/<version>/summary.md` + `review.md`（+ 其他未提交的版本文件）
+- Commit B（如有控制文档更新）：控制文档变更
+
+> 闭环是便捷的打包操作，不是唯一路径。用户仍可单独触发 ry-summary、ry-review，也可手动触发 docs-control 的 update/review 场景。
+
+---
+
+## 7. 项目特定 patch（按需）
 
 本节补充该项目独有的运行时约束（验证路径、commit 规则、命名要求等）。不放通用规则或版本专属细节。

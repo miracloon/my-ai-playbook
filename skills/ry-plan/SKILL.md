@@ -79,4 +79,5 @@ Batch 3（建议新会话）: task06 — 高复杂度，预计消耗大量上下
 
 - `docs/dev_notes/<version>/plan.md`
 - `docs/dev_notes/<version>/task01.md` ~ `taskNN.md`
-- 所有文件就绪后，plan 阶段完成，等待用户触发 ry-exec
+- Plan 完成后 git commit（提交 design.md + plan.md + task*.md），此 commit 作为本版本的开发基线
+- 等待用户触发 ry-exec
