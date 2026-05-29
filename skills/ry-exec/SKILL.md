@@ -1,6 +1,6 @@
 ---
 name: ry-exec
-description: [手动触发]Exec 阶段：按计划开发
+description: 【手动触发】Exec 阶段：按计划开发
 ---
 
 # Exec 阶段

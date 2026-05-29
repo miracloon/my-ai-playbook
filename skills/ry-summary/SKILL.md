@@ -1,6 +1,6 @@
 ---
 name: ry-summary
-description: [手动触发]Summary 阶段：事实归档快照
+description: 【手动触发】Summary 阶段：事实归档快照
 ---
 
 # Summary 阶段

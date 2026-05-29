@@ -1,6 +1,6 @@
 ---
 name: ry-design
-description: [手动触发]Design 阶段：意图探索与对齐
+description: 【手动触发】Design 阶段：意图探索与对齐
 ---
 
 # Design 阶段
