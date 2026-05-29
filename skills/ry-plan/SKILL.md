@@ -1,6 +1,6 @@
 ---
 name: ry-plan
-description: 【手动触发】Plan 阶段：执行基线制定
+description: "【手动触发】Plan 阶段：执行基线制定"
 ---
 
 # Plan 阶段
