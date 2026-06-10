@@ -45,6 +45,8 @@ tasks/agent-design/{agent_name}/
 
 ## Skill 规划
 
+## 配置与落地
+
 ## 表达与人格
 
 ## 关键决策

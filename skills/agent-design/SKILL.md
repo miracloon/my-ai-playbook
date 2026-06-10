@@ -54,7 +54,7 @@ description: Use when designing or redesigning a Hermes agent/profile in the cur
 
 ### 4. 配置对齐
 
-只讨论落地所需配置事实：profile 名、workspace 目录、gateway / channel、是否常驻、默认 provider / model、env / credential、需要安装的内置 skill。
+用一轮对话确认落地默认值：gateway 是否常驻、别名、provider / model、渠道同步、TG 渠道、server API 等。内置 skill 不在本阶段讨论；env / credential 只在目标功能确实需要时作为未决外部依赖记录。
 
 ### 5. 写入设计稿并编译草案
 
@@ -67,7 +67,7 @@ description: Use when designing or redesigning a Hermes agent/profile in the cur
 
 ### 6. 是否落地
 
-询问用户是否执行平台操作。若执行，按 Hermes 内置说明书、Hermes 文档或 CLI help 落地；创建 agent 时遵循 `permissions-and-skills.md` 中的轻量落地提醒。
+询问用户是否执行平台操作。若执行，按 Hermes 内置说明书、Hermes 文档或 CLI help 落地；创建 agent 时遵循 `configuration.md` 中的轻量落地提醒。
 
 ## Reference 路由
 
@@ -77,4 +77,5 @@ description: Use when designing or redesigning a Hermes agent/profile in the cur
 | 用户对齐、场景探索、画像完善和收敛标准 | `references/alignment.md` |
 | 从设计稿编译 SOUL / AGENTS 草案 | `references/soul-compilation.md` |
 | 交付前检查、避免模板化和上游噪声下传 | `references/design-quality.md` |
-| 权限、toolset、内置 skill 选拔和轻量落地提醒 | `references/permissions-and-skills.md` |
+| 权限、toolset 和内置 skill 选拔 | `references/permissions-and-skills.md` |
+| 配置默认值、渠道同步和落地配置对齐 | `references/configuration.md` |

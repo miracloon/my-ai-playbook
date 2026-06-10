@@ -95,7 +95,7 @@
 
 | 含糊写法 | 更稳的写法 |
 |----------|------------|
-| 安装并启动 gateway | 如目标 profile 需要 gateway 渠道，交给 operations 安装并启动 |
+| 安装并启动 gateway | 如目标 profile 需要 gateway，按 `configuration.md` 的配置结论落地 |
 | 写入凭据 | 如功能需要凭据，在设计稿的落地配置项中列明，实际写入前确认 |
 | 添加 workspace AGENTS | 只有目标 profile 需要专门 workspace 入口时创建 |
 
