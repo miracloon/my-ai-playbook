@@ -1,81 +1,163 @@
 ---
 name: agent-design
-description: Use when designing or redesigning a Hermes agent/profile in the current station. Produces a reviewable design record and runtime drafts, with lightweight landing preferences for optional platform execution.
+description: Use when designing a new Hermes agent/profile in the current station. Produces reviewable design records and compiled runtime drafts through structured alignment and implementation strategy.
 ---
 
 # Agent Design
 
-设计或重塑本驻地 Hermes agent / profile。
+设计本驻地新 Hermes agent / profile。从意图对齐开始，经过画像讨论和实现策略推演，产出设计草稿和可直接使用的运行时产物。
 
-本 skill 负责把用户意图整理成可回溯的设计稿，并同步编译运行时草案。Hermes 平台操作本身按内置 `hermes-agent` 说明书、Hermes 文档或 CLI help 执行；本 skill 只补充用户偏好和少量落地提醒。
+## 核心概念
 
-## 适用范围
-
-| 适用 | 不适用 |
-|------|--------|
-| 新建 agent / profile 的设计 | 当前业务任务执行 |
-| 已有 agent / profile 的身份、职责、边界、能力或表达方式重塑 | 直接执行 Hermes 平台操作 |
-| 为目标 agent 规划 skill、权限、运行入口和 workspace 入口 | 跨驻地 profile 操作 |
-| 产出可审阅、可回顾、可落地的设计材料 | 为目标 agent 直接实现复杂业务 skill |
+| 概念 | 含义 |
+|------|------|
+| 功能 | 用户视角：agent 能帮用户完成什么任务 |
+| 能力 | 技术视角：agent 靠什么手段完成任务（不展开实现细节） |
+| 草稿 | 设计工作区交付的文件（profile.md / operations.md / decisions.md） |
+| 产物 | 最终编译出的 SOUL.md 和 AGENTS.md，下游直接使用 |
+| 硬约束 | 通过 Hermes 命令行控制（skill / 工具启停等） |
+| 软约束 | 通过提示词控制（行为原则、表达基线等） |
 
 ## 工作契约
 
-- 只设计本驻地 agent / profile。
-- 围绕用户想法逐项讨论，不把画像完善压成一次性问题清单。
-- 在同一轮产出中形成 `tasks/agent-design/{agent_name}/design.md` 和运行时草案。
-- 对用户使用场景对齐，不把架构问题直接抛给用户。
-- 设计稿可以保留取舍和依据；运行时草案只保留下游需要读到的内容。
-- 如果用户要求继续落地，直接按 Hermes 内置说明书和本 skill 的轻量落地偏好执行。
+- 只设计本驻地新 agent / profile
+- 围绕用户想法逐项讨论，不压成一次性问题清单
+- 用场景语言和用户讨论，不抛架构术语
+- 草稿保留取舍和依据；产物只保留下游需要的内容
+- 落地由用户主动推进
 
-## 工作阶段
+## 任务目录
 
-### 1. 意图对齐
+```text
+tasks/agent-design/{agent_name}/
+├── profile.md          # 定位、功能、能力、边界、工作流程
+├── operations.md       # 权限、配置、落地配置项
+├── decisions.md        # 关键决策、阻塞推演方案、未决问题
+├── secret.md           # env 密钥（仅 key，用户补充 value）
+└── compiled/
+    ├── SOUL.md
+    └── workspace-AGENTS.md  # 仅在需要时创建
+```
 
-理解用户的原始想法，确认没有误读。
+## 流程
 
-重点是抓住用户真正想要什么、为什么需要这个 agent，以及当前输入中有哪些歧义、模糊、缺口或隐含期待。
+| 阶段 | 内容 | 推进信号 |
+|------|------|----------|
+| 1. 对齐与画像 | 确认方向 → 深入讨论骨架 | 功能骨架流程图获用户认可 |
+| 2. 实现策略 | 阻塞推演 → 权限 → 配置 → 草稿 → 编译质检 | 实现策略流程图获用户认可 + 编译质检通过 |
+| 3. 落地 | 按 SOP 执行 Hermes 平台操作 | — |
 
-### 2. 画像完善
+### 阶段1：对齐与画像
 
-围绕目标 agent 逐项补全画像。使用场景、职责范围、表达方式、生态关系、成功标准等可以多轮讨论，不要压成一次提问。
+#### 1.1 初步对齐
 
-如果是修改已有 profile，只对受影响部分重新对齐；常见变化包括身份、定位、能力、边界、表达、workspace 规则、工作流程、skill、权限或配置。
+理解用户的原始想法，确认方向没有被误读。
 
-### 3. 实现策略梳理
+需要确认：用户想要什么、为什么需要、哪些明确哪些模糊、有哪些歧义和隐含期待。
 
-在理解画像后，主动整理适合 Hermes 的实现方式：
+初步对齐只负责方向正确，不展开结构。
 
-- SOUL 应承载什么。
-- 是否需要 workspace `AGENTS.md`。
-- 是否适合使用内置 skill、cron、gateway 常驻、外部入口或其他 Hermes 能力。
-- 权限和工具需要保留、收紧或额外授权什么。
+#### 1.2 深度对齐
 
-这里由核心主管把用户意图翻译成 Hermes 中可运行的方案，不要求用户直接选择架构。
+在方向正确的基础上，逐项讨论 agent 的骨架，直到结构化可审查。
 
-### 4. 配置对齐
+核心要求：**已讨论 ≠ 仅覆盖**。每个骨架话题必须真正讨论清楚，不能提了一遍就推进。
 
-用一轮对话确认落地默认值：gateway 是否常驻、别名、provider / model、渠道同步、TG 渠道、server API 等。内置 skill 不在本阶段讨论；env / credential 只在目标功能确实需要时作为未决外部依赖记录。
+**骨架话题**（必须讨论清楚）：
 
-### 5. 写入设计稿并编译草案
+- 定位：这个 agent 是什么角色
+- 功能：能帮用户完成哪些任务
+- 能力：具备哪些手段（不展开实现细节）
+- 功能边界：不做什么
+- 工作流程路由：主干路径和分支
 
-将已收敛内容写入 `tasks/agent-design/{agent_name}/design.md`，并同步编译：
+**辅助话题**（自然浮现，不强制单独展开）：
+
+- 使用场景 / 场景推演
+- 端点（输入输出）
+- 生态关系
+- 表达与人格（默认跳过，用户需要时展开）
+
+**信息去向**：
+
+| 信息 | 草稿 | 产物 |
+|------|------|------|
+| 定位、功能、能力 | 写入 | 编译进产物 |
+| 功能边界 | 写入 | 慎重：进产物易多说多错，质检时特别关注 |
+| 工作流程路由 | 写入 | 按需精简后编译 |
+| 使用场景、场景推演 | 按需写入 | 按需 |
+
+**推进信号**：骨架讨论清楚后，呈现功能骨架流程图，用户认可即可进入阶段2。
+
+参考：`references/alignment.md`
+
+### 阶段2：实现策略
+
+#### 2.1 能力阻塞推演
+
+对每条有讨论价值的能力，代入任务场景做可行性推演：
+
+- 有什么阻塞？需要什么准备 / 工具 / 条件？
+- 用什么方案解决？
+- 可以用哪些现有 skill 完成？
+
+无阻塞、方案明确的能力直接跳过。
+
+推演目的是让用户在 agent 创建前明确每条能力的准备和途径。
+
+**推进信号**：呈现实现策略流程图，用户认可后继续。
+
+参考：`references/capability-analysis.md`
+
+#### 2.2 权限判断
+
+从阻塞推演中提取权限需求，收紧式预备：非必要不开启。
+
+- 硬约束：通过 Hermes 命令行控制的 skill、工具启停
+- 软约束：通过提示词传达的行为边界，放入产物的行为原则模块
+
+参考：`references/permissions.md`
+
+#### 2.3 配置对齐
+
+带默认值推进，用户无反应按默认记录。注入适用的用户通用约束。
+
+参考：`references/config-and-deployment.md`、`references/user-constraints/overview.md`
+
+#### 2.4 草稿落文
+
+将讨论成果整理到任务目录的三个草稿文件中：
+
+| 文件 | 内容 |
+|------|------|
+| `profile.md` | 定位、功能、能力、边界、工作流程 |
+| `operations.md` | 权限清单、配置项、落地配置 |
+| `decisions.md` | 关键决策、阻塞推演方案、未决问题 |
+
+#### 2.5 编译 + 质检
+
+从草稿编译运行时产物：
 
 - `compiled/SOUL.md`
-- 必要时 `compiled/workspace-AGENTS.md`
+- `compiled/workspace-AGENTS.md`（仅在需要时）
 
-编译时遵循 `design-quality.md`，避免模板化、上游噪声下传和目标 agent 不可见概念。
+编译后执行质量检验。
 
-### 6. 是否落地
+参考：`references/compilation.md`
 
-询问用户是否执行平台操作。若执行，按 Hermes 内置说明书、Hermes 文档或 CLI help 落地；创建 agent 时遵循 `configuration.md` 中的轻量落地提醒。
+### 阶段3：落地
+
+按 Hermes 内置说明书和部署 SOP 执行平台操作。
+
+参考：`references/config-and-deployment.md`
 
 ## Reference 路由
 
 | 需要 | 读取 |
 |------|------|
-| 建立任务目录、维护设计稿 | `references/task-folder.md` |
-| 用户对齐、场景探索、画像完善和收敛标准 | `references/alignment.md` |
-| 从设计稿编译 SOUL / AGENTS 草案 | `references/soul-compilation.md` |
-| 交付前检查、避免模板化和上游噪声下传 | `references/design-quality.md` |
-| 权限、toolset 和内置 skill 选拔 | `references/permissions-and-skills.md` |
-| 配置默认值、渠道同步和落地配置对齐 | `references/configuration.md` |
+| 对齐引导、话题覆盖、收敛标准 | `references/alignment.md` |
+| 能力阻塞推演方法 | `references/capability-analysis.md` |
+| 权限收紧逻辑、硬/软约束 | `references/permissions.md` |
+| 配置默认值、部署 SOP | `references/config-and-deployment.md` |
+| 用户通用约束（记忆、环境等） | `references/user-constraints/overview.md` |
+| 编译原则、质量检验 | `references/compilation.md` |
