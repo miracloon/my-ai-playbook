@@ -13,7 +13,7 @@ description: 【手动触发】Summary 阶段：事实归档快照
 
 Summary 是可选的——跳过不破坏系统。design + plan + git log 本身已够恢复上下文。Summary 是锦上添花的快照，不是系统运转的依赖。
 
-Summary 同时作为 docs-control review 流程的参考输入——确保内容结构化、可被后续版本管理流程消费。
+Summary 同时作为 ry-docs-control review 流程的参考输入——确保内容结构化、可被后续版本管理流程消费。
 
 ---
 

@@ -32,7 +32,7 @@ AI_GLOBAL_PREFS.md 是用户维护的跨项目全局偏好种子文件。
 # AI_GLOBAL_PREFS 模板与指南
 
 > 本文件是 `AI_GLOBAL_PREFS.md` 的模板和填写指南。
-> 实际的偏好文件位于 skill 根目录：`docs-control/AI_GLOBAL_PREFS.md`。
+> 实际的偏好文件位于 skill 根目录：`ry-docs-control/AI_GLOBAL_PREFS.md`。
 
 ---
 
