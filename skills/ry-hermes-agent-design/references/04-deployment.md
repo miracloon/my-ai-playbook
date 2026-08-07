@@ -91,19 +91,7 @@ baseline 在本流程中只作为首次部署基座。植入编译产物后，�
    不通过 clone 初始化 Honcho。需要查看全局 peer 映射时使用 `hermes honcho peers`。若本驻地当前未激活 Honcho，而阶段3明确为目标新引入 Honcho，则按 `hermes -p <profile-name> memory setup honcho` 的 provider 初始化流程执行，不能直接调用尚未注册的 `hermes honcho` 子命令。其他 memory provider 按其 profile 隔离机制处理；只有存在额外初始化要求时才执行对应操作。阶段3选择 built-in only 时不启用外部 provider。
 6. 按下方路由应用 skill keep-list、Cron、渠道、API server 和其他配置
 
-### 5. 启动与服务
-
-仅当 `operations.md` 声明渠道、Cron、API Server 或其他持续入口时启动 gateway。默认的一 profile 一 gateway 模式下：
-
-```bash
-hermes -p <profile-name> gateway install --start-now
-```
-
-若 default profile 已开启 `gateway.multiplex_profiles`，不为 secondary profile 安装独立 gateway；完成配置后重启 default gateway，使其重新加载目标 profile。
-
-重启或修改 default gateway 属于目标 profile 之外的操作，只在 `operations.md` 已明确声明其必要性和作用域时执行。
-
-所有固定配置和按需路由完成后再执行本步骤。渠道、API server 和 Cron scheduler 通过当前 gateway 模式提供服务。无持续入口时不安装 gateway 服务，直接进入启动验收。
+所有固定配置和按需路由完成后，执行最后的"重启宿主 gateway"步骤。
 
 ## 按需操作路由
 
@@ -158,20 +146,11 @@ hermes -p <profile-name> config check
 
 ### Server API
 
-阶段3已声明 API server 且环境变量文件已准备时，按 gateway 模式应用：
-
-- 一 profile 一 gateway：目标 profile 的 `.env` 至少包含 `API_SERVER_ENABLED=true` 和 `API_SERVER_KEY`
-- multiplex secondary profile：目标 profile 不设置 `API_SERVER_ENABLED`、`API_SERVER_KEY` 或独立监听端口；API server listener、鉴权与端口绑定配置只存在于 default profile
-
-需要对外或跨设备访问时，按设计写入监听地址、端口和明确的 CORS allowlist；不在此阶段自行放宽监听地址。
-
-multiplex 场景还必须确认 default profile 已启用共享 API server listener，并验证目标 profile 的共享路由。若需要为此修改 default profile，其配置项和重启操作必须已在 `operations.md` 中单独声明；不得在阶段4临场扩大作用域。当前 Hermes 会把 secondary profile 中单独存在的 `API_SERVER_KEY` 也视为启用端口绑定平台，因此同样禁止。
+阶段3已声明 API server 且环境变量文件已准备时：目标 profile 不设置 `API_SERVER_ENABLED`、`API_SERVER_KEY` 或独立监听端口；API server listener、鉴权与端口绑定配置只存在于 default profile。若需要为此修改 default profile，其配置项和重启操作必须已在 `operations.md` 中单独声明；不得在阶段4临场扩大作用域。
 
 ```bash
 hermes -p <profile-name> config check
 ```
-
-API server 默认监听 `127.0.0.1:8642`。默认的一 profile 一 gateway 模式下，并发运行多个 API server 时需要在阶段3分配独立端口；multiplex secondary profile 由 default gateway 的共享 listener 通过 `/p/<profile>/` 路由。
 
 ## 启动验收
 
@@ -188,7 +167,6 @@ API server 默认监听 `127.0.0.1:8642`。默认的一 profile 一 gateway 模�
 - skill 启用集合符合阶段3设计
 - 配置可被当前 Hermes 正常加载
 - profile 能够正常启动并完成一次最小响应
-- 存在持续入口时，所需 gateway 和常驻服务能够正常启动；否则该项不适用
 
 关键验证入口：
 
@@ -199,13 +177,13 @@ hermes -p <profile-name> doctor
 hermes -p <profile-name> chat -q '<minimal-prompt>' -Q
 ```
 
-独立 gateway 使用 `hermes -p <profile-name> gateway status --deep`；multiplex 模式检查 default gateway 及其对目标 profile 的加载状态。有 Cron 时在 gateway 启动后检查 `cron list` 与 `cron status`。有 API server 时验证对应 gateway 模式下的 health endpoint；不在验收命令中暴露 API key。
+有 Cron 时检查 `cron list` 与 `cron status`。有 API server 时验证 health endpoint；不在验收命令中暴露 API key。宿主 gateway 对目标 profile 的加载状态在最后一步重启后由用户或后续会话确认。
 
 不测试渠道实际收发、业务功能质量或人格体验；这些由用户后续验用。
 
 ## 登记结果
 
-记录实际部署状态、部署偏差和待用户验用事项。将 profile 名、类型、职责、默认 workspace、可委派状态和必要备注登记到阶段3指定的本驻地 agent 一览；只登记本驻地 agent，不扩写其他物理驻地的信息。
+记录实际部署状态、部署偏差和待用户验用事项。将 profile 名、类型、职责、默认 workspace、可委派状态和必要备注登记到阶段3指定的本驻地 agent 一览；只登记本驻地 agent，不扩写其他物理驻地的信息。登记中明确"宿主 gateway 重启后加载状态"为待确认项。
 
 验收通过并记录 baseline source/version 后，将目标 profile 根目录的 `distribution.yaml` 移入用户自有路径 `local/bootstrap-distribution.yaml`。成品 profile 因此解除 baseline distribution 关联，避免 `profile update` 覆盖装修资产；来源记录仍保留。后续 baseline 变化若需应用，作为显式迁移审查差异并重放该 agent 的部署契约。
 
@@ -219,3 +197,13 @@ hermes profile show <profile-name>
 验证 `profile show` 不再显示 Distribution，同时 bootstrap manifest 仍存在于 `local/`。
 
 每个步骤完成后原子更新部署状态账本。部署中途失败时记录最后一个成功步骤和失败证据，保留现场供续跑；不自动删除 profile、workspace 或已创建的运行状态。完成登记与 distribution 解除关联后，将账本标记为 completed，作为后续审计和显式迁移的依据。
+
+## 重启宿主 gateway
+
+所有固定配置和按需路由完成后，执行最后一步：重启宿主 default gateway，使其加载目标 profile。
+
+```bash
+systemctl --user restart hermes-gateway
+```
+
+执行本步骤会中断当前会话。这是预期且允许的：所有部署操作已在重启前完成，重启后加载状态已作为待确认项登记，不依赖本会话继续输出。

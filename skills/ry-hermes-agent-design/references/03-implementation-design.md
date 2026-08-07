@@ -43,13 +43,12 @@ baseline 默认提供：
 
 ## 配置对齐
 
-配置对齐用于收敛首次部署所需的配置事实。一轮对话完成，只讨论偏离默认值或 baseline 无法覆盖的配置。可从本机检索的现状先直接检查，包括现有 profile、gateway/multiplex 状态、端口和路径占用；不把环境事实转化为用户问卷。
+配置对齐用于收敛首次部署所需的配置事实。一轮对话完成，只讨论偏离默认值或 baseline 无法覆盖的配置。可从本机检索的现状先直接检查，包括现有 profile 和路径占用；不把环境事实转化为用户问卷。
 
 profile 名称使用 Hermes 可接受的规范名称。workspace 默认使用 `/home/ry/agent/hermes/workspace/{profile-name}`；只有目标职责明确需要其他现有目录时才偏离。
 
 | 配置项 | 默认值 |
 |--------|--------|
-| gateway 是否常驻 | 仅渠道、Cron、API Server 或其他持续入口需要时启用 |
 | 是否注册别名 | 是 |
 | provider | `custom:axonhub-pro` |
 | model | `deepseek-v4-flash` |
@@ -81,7 +80,6 @@ profile 名称使用 Hermes 可接受的规范名称。workspace 默认使用 `/
 
 - profile 名称、是否注册别名、面向生态路由的简短 description
 - 由 Hermes 根据 profile 名解析并在部署时核实的 profile home、workspace 的绝对路径、是否新建或复用，以及是否需要 `AGENTS.md`
-- gateway 是否需要常驻，以及采用独立 gateway 还是既有 multiplex gateway；无持续入口时明确不安装服务
 - provider/model；有 Cron 时同时明确无人值守推理路由
 - timezone；没有 Cron 时可沿用环境默认值
 - 默认 skill 之外需要启用的 builtin skill
@@ -115,7 +113,7 @@ profile 名称使用 Hermes 可接受的规范名称。workspace 默认使用 `/
 - 是否混入设计过程、平台操作、临时判断或通用能力说明
 - 结构、标题层级和条件表达是否清楚
 - `operations.md` 是否足以让阶段4直接执行
-- profile、workspace、gateway 模式和所有按需路由是否都有明确输入
+- profile、workspace 和所有按需路由是否都有明确输入
 - 环境变量文件是否已经由用户准备且路径可访问
 - Cron 是否具备完整任务字段和稳定的无人值守推理路由
 - 所需部署路由是否已经具备执行方法

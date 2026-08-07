@@ -21,6 +21,7 @@ description: Use when designing and initially deploying a new Hermes agent/profi
 ## 工作契约
 
 - 只处理本驻地新 agent / profile 的设计与首次部署
+- 本驻地新 agent 默认以 multiplex secondary profile 形态部署；gateway 由宿主统一托管，本 skill 不涉及 gateway 设计、决策或部署
 - 围绕用户想法逐项讨论，不压成一次性问题清单
 - 用场景语言和用户讨论，不抛架构术语
 - 设计文件保留取舍和依据；运行时产物只保留下游需要的内容
@@ -138,7 +139,7 @@ task/agent-design/{agent_name}/
 
 按需加入 Cron 等可部署资产；脚本必须完成静态检查和非破坏性验证。编译质检通过，且阶段4无需再次询问用户，即可进入部署。
 
-`operations.md` 必须形成完整部署契约，明确 profile/workspace、gateway 模式、provider/model、skill、环境变量文件、按需路由、外部作用域和登记落点；不适用项明确跳过，不把空白决策留给阶段4。
+`operations.md` 必须形成完整部署契约，明确 profile/workspace、provider/model、skill、环境变量文件、按需路由、外部作用域和登记落点；不适用项明确跳过，不把空白决策留给阶段4。
 
 参考：`references/03-implementation-design.md`
 
