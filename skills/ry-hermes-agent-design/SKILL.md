@@ -1,11 +1,11 @@
 ---
-name: agent-design
-description: Use when designing a new Hermes agent/profile in the current station. Produces reviewable design records and compiled runtime drafts through structured alignment and implementation strategy.
+name: ry-hermes-agent-design
+description: Use when designing and initially deploying a new Hermes agent/profile in the current station. Produces reviewable design records, compiled runtime files, and deployment inputs.
 ---
 
 # Agent Design
 
-设计本驻地新 Hermes agent / profile。从意图对齐开始，经过画像讨论和实现策略推演，产出设计草稿和可直接使用的运行时产物。
+从零设计并首次部署本驻地的新 Hermes agent / profile。不负责既有 agent 的审计、优化、重构或持续迭代。
 
 ## 核心概念
 
@@ -13,151 +13,157 @@ description: Use when designing a new Hermes agent/profile in the current statio
 |------|------|
 | 功能 | 用户视角：agent 能帮用户完成什么任务 |
 | 能力 | 技术视角：agent 靠什么手段完成任务（不展开实现细节） |
-| 草稿 | 设计工作区交付的文件（profile.md / operations.md / decisions.md） |
-| 产物 | 最终编译出的 SOUL.md 和 AGENTS.md，下游直接使用 |
-| 硬约束 | 通过 Hermes 命令行控制（skill / 工具启停等） |
-| 软约束 | 通过提示词控制（行为原则、表达基线等） |
+| 已声明边界 | 用户在意图阶段明确提出的前提或排除项，约束后续设计 |
+| 功能边界 | 概念设计形成的职责范围，说明 agent 不承接什么 |
+| 设计文件 | 设计过程形成的 `design.md`、`operations.md` 和 `decisions.md` |
+| 运行时产物 | 最终编译出的 SOUL.md、AGENTS.md 和按需资产，下游直接使用 |
 
 ## 工作契约
 
-- 只设计本驻地新 agent / profile
+- 只处理本驻地新 agent / profile 的设计与首次部署
 - 围绕用户想法逐项讨论，不压成一次性问题清单
 - 用场景语言和用户讨论，不抛架构术语
-- 草稿保留取舍和依据；产物只保留下游需要的内容
-- 落地由用户主动推进
+- 设计文件保留取舍和依据；运行时产物只保留下游需要的内容
+- 前三阶段完成全部设计与配置确认；第四阶段只执行部署
 
 ## 任务目录
 
 ```text
-tasks/agent-design/{agent_name}/
-├── profile.md          # 定位、功能、能力、边界、工作流程
-├── operations.md       # 权限、配置、落地配置项
-├── decisions.md        # 关键决策、阻塞推演方案、未决问题
-├── secret.md           # env 密钥（仅 key，用户补充 value）
+task/agent-design/{agent_name}/
+├── design.md           # 设计记录，也是运行时文档的编译来源
+├── operations.md       # 第四阶段直接消费的部署语义
+├── decisions.md        # 关键取舍、依据和待补项
 └── compiled/
     ├── SOUL.md
-    └── workspace-AGENTS.md  # 仅在需要时创建
+    ├── AGENTS.md  # 仅在需要时创建
+    └── scripts/   # Cron 等部署脚本，仅在需要时创建
 ```
 
 ## 流程
 
 | 阶段 | 内容 | 推进信号 |
 |------|------|----------|
-| 1. 对齐与画像 | 确认方向 → 深入讨论骨架 | 功能骨架流程图获用户认可 |
-| 2. 实现策略 | 阻塞推演 → 权限 → 配置 → 草稿 → 编译质检 | 实现策略流程图获用户认可 + 编译质检通过 |
-| 3. 落地 | 按 SOP 执行 Hermes 平台操作 | — |
+| 1. 意图对齐 | 对齐目标、动机、边界与成功图景 | 设计意图获用户确认 |
+| 2. 概念设计 | 建立定位、功能、能力、边界与工作路径 | 概念模型获用户确认 |
+| 3. 实现设计与编译 | 设计运行时软配置与平台配置，形成设计记录并编译产物 | 实现方案获用户确认 + 编译质检通过 |
+| 4. 部署与验收 | 按既定设计部署、验证并登记新 agent | 启动验收通过 |
 
-### 阶段1：对齐与画像
+### 阶段1：意图对齐
 
-#### 1.1 初步对齐
+理解用户为什么需要这个 agent，以及最终想获得什么：
 
-理解用户的原始想法，确认方向没有被误读。
+- 对齐目标、动机、已声明边界和成功图景
+- 区分已经明确的期待与仍待澄清的模糊直觉
+- 只处理会改变整体设计方向的歧义
 
-需要确认：用户想要什么、为什么需要、哪些明确哪些模糊、有哪些歧义和隐含期待。
+阶段1只确认设计方向，不定义定位、功能、能力或工作路径。关键意图不存在已知分歧并获用户确认后，进入阶段2。
 
-初步对齐只负责方向正确，不展开结构。
+参考：`references/01-intent-alignment.md`
 
-#### 1.2 深度对齐
+### 阶段2：概念设计
 
-在方向正确的基础上，逐项讨论 agent 的骨架，直到结构化可审查。
+阶段2将已确认的意图转化为完整的 agent 概念模型。以下是需要覆盖的设计语义，不是固定对话轮次；信息充分时合并推进，存在关键分歧时继续讨论。
 
-核心要求：**已讨论 ≠ 仅覆盖**。每个骨架话题必须真正讨论清楚，不能提了一遍就推进。
+#### 2.1 建立定位
 
-**骨架话题**（必须讨论清楚）：
+定义 agent 的角色、用户为什么会找它，以及它在本驻地生态中的位置。
 
-- 定位：这个 agent 是什么角色
-- 功能：能帮用户完成哪些任务
-- 能力：具备哪些手段（不展开实现细节）
-- 功能边界：不做什么
-- 工作流程路由：主干路径和分支
+#### 2.2 建立功能模型
 
-**辅助话题**（自然浮现，不强制单独展开）：
+从用户视角整理核心功能、功能之间的关系、主干与必要分支，并明确不属于它的需求。只建立足以支撑整体心智模型的骨架，不穷尽功能清单。
 
-- 使用场景 / 场景推演
-- 端点（输入输出）
-- 生态关系
-- 表达与人格（默认跳过，用户需要时展开）
+当用户主动需要更多建议或启发时，可以在已声明边界内提出合理的功能方向，帮助用户看见尚未想到的用途；建议用于启发，不替用户扩张目标。
 
-**信息去向**：
+#### 2.3 建立能力模型
 
-| 信息 | 草稿 | 产物 |
-|------|------|------|
-| 定位、功能、能力 | 写入 | 编译进产物 |
-| 功能边界 | 写入 | 慎重：进产物易多说多错，质检时特别关注 |
-| 工作流程路由 | 写入 | 按需精简后编译 |
-| 使用场景、场景推演 | 按需写入 | 按需 |
+为每项核心功能建立所需能力，形成“用户目标 → 功能 → 能力”的对应关系。能力保持在概念层，只需说明 agent 依靠什么手段完成功能。
 
-**推进信号**：骨架讨论清楚后，呈现功能骨架流程图，用户认可即可进入阶段2。
+#### 2.4 形成工作路径
 
-参考：`references/alignment.md`
+将定位、功能和能力组织为接到任务后的主干路径与真实分支，说明用户在什么场景下找它、它如何推进、最终交付什么。不展开运行时 SOP 或具体实现步骤。
 
-### 阶段2：实现策略
+#### 2.5 验证概念可行性
 
-#### 2.1 能力阻塞推演
+通过典型场景推演、思想实验和必要调研，检查功能是否有能力支撑、工作路径是否闭合，以及是否存在必须修改定位或功能模型的硬阻塞。
 
-对每条有讨论价值的能力，代入任务场景做可行性推演：
+#### 2.6 呈现概念模型
 
-- 有什么阻塞？需要什么准备 / 工具 / 条件？
-- 用什么方案解决？
-- 可以用哪些现有 skill 完成？
+向用户呈现定位、核心功能、所需能力、主干工作路径、关键分支和功能边界。用户认可概念模型后进入阶段3。
 
-无阻塞、方案明确的能力直接跳过。
+参考：`references/02-concept-design.md`
 
-推演目的是让用户在 agent 创建前明确每条能力的准备和途径。
+### 阶段3：实现设计与编译
 
-**推进信号**：呈现实现策略流程图，用户认可后继续。
+阶段3将前两阶段的概念设计转化为运行时设计和完整部署输入。
 
-参考：`references/capability-analysis.md`
+#### 3.1 汇总设计输入
 
-#### 2.2 权限判断
+整理前两阶段已经确认的定位、功能、能力、边界、工作路径和生态关系，检查其一致性，不重新讨论概念设计。
 
-从阻塞推演中提取权限需求，收紧式预备：非必要不开启。
+#### 3.2 设计运行时上下文
 
-- 硬约束：通过 Hermes 命令行控制的 skill、工具启停
-- 软约束：通过提示词传达的行为边界，放入产物的行为原则模块
+- 设计 `SOUL.md` 所需的身份、职责、判断原则、行为方式和表达基线
+- 设计 workspace `AGENTS.md` 所需的工作区结构、用途、治理规则和局部约定
+- 按需注入适用的用户通用约束
+- 人格设计默认跳过；用户需要或提供人格设计稿时，读取人格参考并纳入设计
 
-参考：`references/permissions.md`
+设计内容先写入 `design.md`，不是直接把讨论原文当作运行时产物。
 
-#### 2.3 配置对齐
+参考：`references/03-implementation-design.md`
 
-带默认值推进，用户无反应按默认记录。注入适用的用户通用约束。
+#### 3.3 确定必要扩展
 
-参考：`references/config-and-deployment.md`、`references/user-constraints/overview.md`
+**Skill：** baseline 默认提供 `hermes-agent` 和 baseline 内置的 `ry-hermes-home-visibility-repair`，不进入设计讨论。除此之外，只选择 Hermes 已有且完成核心功能直接必需的 skill；不设计新 skill、不联网寻找推荐项、不加入仅可能相关的 skill。
 
-#### 2.4 草稿落文
+**Cron：** 仅当前两阶段已经确认定时、周期或持续触发需求时进入设计，否则跳过。任务必须能在 fresh session 中独立执行，并收敛 timezone、delivery 依赖和无人值守推理路由；设计结果作为部署语义交给阶段4。
 
-将讨论成果整理到任务目录的三个草稿文件中：
+不讨论权限和 toolset。
 
-| 文件 | 内容 |
-|------|------|
-| `profile.md` | 定位、功能、能力、边界、工作流程 |
-| `operations.md` | 权限清单、配置项、落地配置 |
-| `decisions.md` | 关键决策、阻塞推演方案、未决问题 |
+#### 3.4 配置对齐
 
-#### 2.5 编译 + 质检
+默认配置直接成立，只讨论偏离默认值或 baseline 无法覆盖的配置。先检查可检索的本机现状；非默认配置和按需部署路由需要额外输入时，在本阶段补齐。
 
-从草稿编译运行时产物：
+参考：`references/03-implementation-design.md`
 
+#### 3.5 编译与质检
+
+整理设计文件并编译运行时产物：
+
+- `design.md`：设计记录和编译来源
+- `operations.md`：阶段4直接消费的部署语义
+- `decisions.md`：关键取舍、依据和待补项
 - `compiled/SOUL.md`
-- `compiled/workspace-AGENTS.md`（仅在需要时）
+- `compiled/AGENTS.md`（仅在需要时）
+- `compiled/scripts/`（仅在已设计的部署项需要脚本时）
 
-编译后执行质量检验。
+按需加入 Cron 等可部署资产；脚本必须完成静态检查和非破坏性验证。编译质检通过，且阶段4无需再次询问用户，即可进入部署。
 
-参考：`references/compilation.md`
+`operations.md` 必须形成完整部署契约，明确 profile/workspace、gateway 模式、provider/model、skill、环境变量文件、按需路由、外部作用域和登记落点；不适用项明确跳过，不把空白决策留给阶段4。
 
-### 阶段3：落地
+参考：`references/03-implementation-design.md`
 
-按 Hermes 内置说明书和部署 SOP 执行平台操作。
+### 阶段4：部署与验收
 
-参考：`references/config-and-deployment.md`
+阶段4只执行阶段3已经确认并写好的部署设计，不在部署过程中继续设计或向用户重复确认。
+
+1. 自检部署输入是否完整；缺失则停止部署并返回阶段3补全
+2. 只能从 `github.com/miracloon/hermes-profile-baseline` 安装目标 profile；不得使用任何 profile clone 路径
+3. 将编译产物植入目标 profile 和 workspace
+4. 应用已确定的配置，执行固定部署 SOP 和已选的可选部署项
+5. 验证 profile 结构、配置和启动状态；不执行渠道收发或功能质量测试
+6. 登记实际部署结果
+
+部署支持基于已核实现场的中断续跑，但不使用 `--force` 接管碰撞对象，不重复创建 Cron；失败时保留现场和证据，不自动清理。
+
+参考：`references/04-deployment.md`
 
 ## Reference 路由
 
 | 需要 | 读取 |
 |------|------|
-| 对齐引导、话题覆盖、收敛标准 | `references/alignment.md` |
-| 能力阻塞推演方法 | `references/capability-analysis.md` |
-| 权限收紧逻辑、硬/软约束 | `references/permissions.md` |
-| 配置默认值、部署 SOP | `references/config-and-deployment.md` |
+| 阶段1：意图对齐 | `references/01-intent-alignment.md` |
+| 阶段2：概念设计 | `references/02-concept-design.md` |
+| 阶段3：实现设计与编译 | `references/03-implementation-design.md` |
+| 阶段4：部署与验收 | `references/04-deployment.md` |
+| 人格设计边界 | `references/personality.md` |
 | 用户通用约束（记忆、环境等） | `references/user-constraints/overview.md` |
-| 编译原则、质量检验 | `references/compilation.md` |
