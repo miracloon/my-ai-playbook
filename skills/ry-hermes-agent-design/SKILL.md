@@ -1,6 +1,11 @@
 ---
 name: ry-hermes-agent-design
 description: Use when designing and initially deploying a new Hermes agent/profile in the current station. Produces reviewable design records, compiled runtime files, and deployment inputs.
+metadata:
+  ry:
+    canonical_source:
+      repository: my-ai-playbook
+      path: skills/ry-hermes-agent-design
 ---
 
 # Agent Design
