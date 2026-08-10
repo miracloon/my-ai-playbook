@@ -2,6 +2,11 @@
 name: ry-tool-investigate
 description: 调研用户指定的工具或项目，收集信息并定位它在用户工作流中的实际价值。用户想了解一个对象值不值得引入时触发
 disable-model-invocation: true
+metadata:
+  ry:
+    canonical_source:
+      repository: my-ai-playbook
+      path: skills/ry-tool-investigate
 ---
 
 调研用户指定的对象，帮用户快速建立对它的有效认识。核心不是介绍得完整，而是说清它在实际工作中能改变什么、与用户现有工具和工作流是什么关系，以及目前的信息能信到什么程度。
