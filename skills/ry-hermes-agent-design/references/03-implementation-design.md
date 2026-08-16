@@ -52,7 +52,6 @@ profile 名称使用 Hermes 可接受的规范名称。workspace 默认使用 `/
 | 是否注册别名 | 是 |
 | provider | `custom:axonhub-pro` |
 | model | `deepseek-v4-flash` |
-| memory provider | 继承本驻地当前 provider；无外部 provider 时使用 built-in memory |
 | 是否接入渠道 | 否 |
 | 是否暴露 server API | 否 |
 
@@ -87,7 +86,6 @@ profile 名称使用 Hermes 可接受的规范名称。workspace 默认使用 `/
 - 需要执行的渠道、API server、Cron 和其他按需路由及全部参数
 - 部署脚本的源文件、目标相对路径、执行方式和验证结果
 - 会修改目标 profile 之外对象的操作、必要性和明确作用域
-- 目标 profile 的 memory provider 及其新 profile 初始化要求
 - baseline 来源及部署时需要记录的实际 distribution version
 - 部署后资产所有权和 baseline 后续升级边界
 - 部署状态账本的落点和登记要求

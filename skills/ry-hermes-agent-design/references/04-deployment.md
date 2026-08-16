@@ -80,16 +80,7 @@ baseline 在本流程中只作为首次部署基座。植入编译产物后，�
    ```
 
    非默认值将命令中的值替换为阶段3确认值；需要 Hermes 交互式发现或选择时才使用 `hermes -p <profile-name> model`。完成后执行 `config check`。
-5. 应用阶段3确认的 memory provider。继承本驻地当前已激活的 Honcho 时，先执行幂等的 profile 同步，为新 profile 创建独立 AI peer并共享既有用户 workspace；再为目标 profile 启用 Honcho：
-
-   ```bash
-   hermes honcho sync
-   hermes -p <profile-name> config set memory.provider honcho
-   hermes -p <profile-name> memory status
-   ```
-
-   不通过 clone 初始化 Honcho。需要查看全局 peer 映射时使用 `hermes honcho peers`。若本驻地当前未激活 Honcho，而阶段3明确为目标新引入 Honcho，则按 `hermes -p <profile-name> memory setup honcho` 的 provider 初始化流程执行，不能直接调用尚未注册的 `hermes honcho` 子命令。其他 memory provider 按其 profile 隔离机制处理；只有存在额外初始化要求时才执行对应操作。阶段3选择 built-in only 时不启用外部 provider。
-6. 按下方路由应用 skill keep-list、Cron、渠道、API server 和其他配置
+5. 按下方路由应用 skill keep-list、Cron、渠道、API server 和其他配置
 
 所有固定配置和按需路由完成后，执行最后的"重启宿主 gateway"步骤。
 
@@ -163,7 +154,6 @@ hermes -p <profile-name> config check
 - workspace 和工作目录正确
 - 环境变量文件已按设计应用，且未在对话中暴露明文
 - provider sync 已执行
-- memory provider 已完成目标 profile 所需的初始化
 - skill 启用集合符合阶段3设计
 - 配置可被当前 Hermes 正常加载
 - profile 能够正常启动并完成一次最小响应
