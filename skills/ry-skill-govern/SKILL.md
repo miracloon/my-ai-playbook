@@ -1,6 +1,11 @@
 ---
 name: ry-skill-govern
 description: 【手动触发】仅在用户明确调用本 Skill 时，从当前意图重新设计、审阅、重构或迭代 Skill；适用于新建、结构性治理、实战反馈迭代和明确的局部调整
+metadata:
+  ry:
+    canonical_source:
+      repository: my-ai-playbook
+      path: skills/ry-skill-govern
 ---
 
 # Skill 治理
