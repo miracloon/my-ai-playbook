@@ -1,6 +1,11 @@
 ---
 name: ry-docker-deploy
 description: 为自托管项目设计、适配并实施 Docker Compose 部署；用户提供项目、仓库、镜像或现有配置，要求准备部署、调整配置、迁移或升级时使用。
+metadata:
+  ry:
+    canonical_source:
+      repository: my-ai-playbook
+      path: skills/ry-docker-deploy
 ---
 
 # Docker 项目部署
