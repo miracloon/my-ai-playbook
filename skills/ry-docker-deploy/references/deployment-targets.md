@@ -7,7 +7,7 @@
 ## `vps_h`
 
 - 项目目录：`/opt/1panel/docker/compose/<project>/`。
-- 需要连接现有共享服务时按需接入 `1panel-network`；项目内部服务可以继续使用自己的 Compose 默认网络，不为形式统一全部加入外部网络。
+- `1panel-network` 是 vps_h 主要业务容器默认使用的共享集成网络，用于保持服务互联、反代衔接和后续演进的一致性；只有存在具体、可验证的项目网络模型、安全隔离或运行代价等反例时，才偏离到 Compose 默认网络或其他模式。纯栈内辅助组件可留在内部网络，是否加入按其业务边界判断。
 - 不需要反代时完全忽略 OpenResty。
 - 标准 HTTP 反代时，处理好 Compose 与应用侧的端口、公开 URL、TLS 终结、cookie、proxy trust 或 CORS；不在交付中提醒、解释或复述用户能通过 1Panel UI 完成的普通反代操作。
 - 存在 WebSocket、SSE、流式或长请求、大文件、特殊 path、代理头、超时、CDN 影响等非标准要求时，先完成 Docker 与应用侧配置，再简洁说明用户需要在 OpenResty 中手动处理的差异。提供足够操作依据，但不默认直接修改 OpenResty。
