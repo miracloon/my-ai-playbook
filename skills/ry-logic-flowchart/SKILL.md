@@ -2,6 +2,8 @@
 name: ry-logic-flowchart
 description: 【手动触发】将讨论内容梳理为文字总结 + 逻辑流程图，用可视化暴露逻辑缺口和认知漂移
 disable-model-invocation: true
+metadata:
+  version: v1.0
 ---
 
 用户希望对当前讨论的内容做一次梳理和回顾。
@@ -35,4 +37,3 @@ disable-model-invocation: true
 | 模式 | 触发 | 行为 |
 |------|------|------|
 | 仅主线 | 用户声明"仅展示主线"或类似表述 | 省略次要分支，突出主干流程 |
-

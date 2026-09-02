@@ -3,6 +3,7 @@ name: ry-tool-investigate
 description: 建立用户指定工具/项目的对象认知：它是什么、承担什么工作、能改变哪段工作流、与现有工具的关系（覆盖/重叠/增量/互补）、能力与可信度边界。当用户想弄明白一个工具或项目本身——了解、调研、定位价值、比较、判断是否值得继续关注或采用——时触发。
 disable-model-invocation: true
 metadata:
+  version: v1.0
   ry:
     canonical_source:
       repository: my-ai-playbook

@@ -2,6 +2,8 @@
 name: ry-reverse-instruct
 description: 【手动触发】逆向 vibe coding 导读——用自然语言理解代码工程，反推指挥 AI 的思维方式
 disable-model-invocation: true
+metadata:
+  version: v1.0
 ---
 
 ## 定位

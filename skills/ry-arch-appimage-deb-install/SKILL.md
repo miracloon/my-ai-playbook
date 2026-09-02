@@ -2,6 +2,8 @@
 name: ry-arch-appimage-deb-install
 description: 【手动触发】仅在 Arch Linux 上，将用户提供的 AppImage 或 .deb 安装到 /opt，并创建命令行入口、用户级 desktop 和图标
 disable-model-invocation: true
+metadata:
+  version: v1.0
 ---
 
 ## 意图

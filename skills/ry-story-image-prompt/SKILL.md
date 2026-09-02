@@ -2,6 +2,8 @@
 name: story-image-prompt
 description: 【手动触发】基于当前故事上下文，为用户想要具象化的角色或场景构建自包含的生图提示词
 disable-model-invocation: true
+metadata:
+  version: v1.0
 ---
 
 # 故事生图提示词

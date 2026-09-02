@@ -1,6 +1,8 @@
 ---
 name: ry-exec
 description: "【手动触发】Exec 阶段：按计划开发"
+metadata:
+  version: v1.0
 ---
 
 # Exec 阶段

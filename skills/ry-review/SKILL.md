@@ -1,6 +1,8 @@
 ---
 name: ry-review
 description: 【手动触发】Review 阶段：代码与文档质量审阅
+metadata:
+  version: v1.0
 ---
 
 # Review 阶段

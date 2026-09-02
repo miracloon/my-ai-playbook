@@ -2,6 +2,8 @@
 name: ry-skill-creator
 description: 【手动触发】创建新的 skill，在 skill-creator 基础上叠加增强对齐、风格约束和格式自检
 disable-model-invocation: true
+metadata:
+  version: v1.0
 ---
 
 在 skill-creator 的基础上，叠加增强对齐和风格约束，创建符合本体系规范的 skill。

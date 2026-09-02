@@ -2,6 +2,8 @@
 name: ry-align
 description: 【手动触发】对齐检查点，暂停执行并复述对用户请求的理解，可选附加独立分析
 disable-model-invocation: true
+metadata:
+  version: v1.0
 ---
 
 在回应用户的请求之前，暂停，不执行任何操作。

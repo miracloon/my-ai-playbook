@@ -1,6 +1,8 @@
 ---
 name: ry-plan
 description: "【手动触发】Plan 阶段：执行基线制定"
+metadata:
+  version: v1.0
 ---
 
 # Plan 阶段

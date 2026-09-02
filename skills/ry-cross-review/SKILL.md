@@ -2,6 +2,8 @@
 name: ry-cross-review
 description: 【手动触发】对另一个 AI 的观点进行结构化交叉审视，产出可直接搬运的立场文件
 disable-model-invocation: true
+metadata:
+  version: v1.0
 ---
 
 用户在两个 CLI 之间搬运 AI 观点，循环审视直到方案收敛。

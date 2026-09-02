@@ -1,6 +1,8 @@
 ---
 name: ry-design
 description: "【手动触发】Design 阶段：意图探索与对齐"
+metadata:
+  version: v1.0
 ---
 
 # Design 阶段

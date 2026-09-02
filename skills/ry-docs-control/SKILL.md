@@ -1,6 +1,8 @@
 ---
 name: ry-docs-control
 description: "【手动触发】项目控制面文档的初始化、更新与对齐"
+metadata:
+  version: v1.0
 ---
 
 # 控制面文档 Skill

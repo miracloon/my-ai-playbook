@@ -2,6 +2,8 @@
 name: ry-grill
 description: 【手动触发】通过端到端实例模拟压力测试用户的方案或设计，逐个解决隐藏决策问题
 disable-model-invocation: true
+metadata:
+  version: v1.0
 ---
 
 用户有一个方案、设计或计划，想在动手前充分验证。通过一个具体端到端实例模拟真实执行路径，暴露隐藏决策、风险和分支问题，并逐个解决。

@@ -2,6 +2,8 @@
 name: ry-probe
 description: 【手动触发】通过选项式提问建立用户认知画像，确保回答精准匹配用户的意图、水平和关注点
 disable-model-invocation: true
+metadata:
+  version: v1.0
 ---
 
 用户提出了一个问题或话题。不要直接回答——先通过提问建立用户的认知画像，再基于画像给出针对性回答。
