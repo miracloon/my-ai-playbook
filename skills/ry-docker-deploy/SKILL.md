@@ -2,7 +2,7 @@
 name: ry-docker-deploy
 description: 为自托管项目设计、适配并实施 Docker Compose 部署；用户提供项目、仓库、镜像或现有配置，要求准备部署、调整配置、迁移或升级时使用。
 metadata:
-  version: v1.0
+  version: v1.1
   ry:
     canonical_source:
       repository: my-ai-playbook
@@ -66,7 +66,7 @@ metadata:
 
 存在 `<changeme>` 或上述前置条件时：
 
-1. 完成除此之外的 Compose、`.env` 和必要伴生文件，使用户只需替换敏感字段即可运行；
+1. 完成除此之外的 Compose、必要伴生文件（适用时包含 `.env`），使用户只需替换敏感字段即可运行；
 2. 检查并列出每个 `<changeme>` 所在文件和字段，以及用户必须先完成的外部动作；
 3. 停在文件交付，不执行 `docker compose up -d`，也不启动一个已知配置不完整的实例。
 
